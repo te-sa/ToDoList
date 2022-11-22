@@ -48,6 +48,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /*
 This class controls the main screen. It extends our custom ToDoClickListener.
@@ -133,6 +139,32 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
 
         // load in data from file
         loadData();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://jsonplaceholder.typicode.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        JsonApi jsonApi = retrofit.create(JsonApi.class);
+
+        Call<List<Post>> call = jsonApi.getPosts();
+
+        call.enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                if (!response.isSuccessful()) {
+                    System.out.println(response.code());
+                    return;
+                }
+                List<Post> posts = response.body();
+                for (Post post: posts) {
+                    System.out.println(post.getTitle());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {}
+        });
     }
 
     public void onSort(View view){

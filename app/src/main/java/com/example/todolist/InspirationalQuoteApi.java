@@ -5,8 +5,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 
-public interface JsonApi {
+public interface InspirationalQuoteApi {
 
-    @GET("posts")
-    Call<List<Post>> getPosts();
+    @GET("quotes/random")
+    Call<Quote> getPosts();
 }

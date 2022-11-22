@@ -141,29 +141,30 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
         loadData();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/")
+                .baseUrl("https://motivational-quote-api.herokuapp.com/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        JsonApi jsonApi = retrofit.create(JsonApi.class);
+        InspirationalQuoteApi inspirationalQuoteApi = retrofit.create(InspirationalQuoteApi.class);
 
-        Call<List<Post>> call = jsonApi.getPosts();
+        Call<Quote> call = inspirationalQuoteApi.getPosts();
 
-        call.enqueue(new Callback<List<Post>>() {
+        call.enqueue(new Callback<Quote>() {
+
             @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+            public void onResponse(Call<Quote> call, Response<Quote> response) {
                 if (!response.isSuccessful()) {
                     System.out.println(response.code());
                     return;
                 }
-                List<Post> posts = response.body();
-                for (Post post: posts) {
-                    System.out.println(post.getTitle());
-                }
+                Quote quote = response.body();
+                System.out.println(quote.getQuote()+" -"+ quote.getAuthor());
             }
 
             @Override
-            public void onFailure(Call<List<Post>> call, Throwable t) {}
+            public void onFailure(Call<Quote> call, Throwable t) {
+                System.out.println("ERROR: "+t);
+            }
         });
     }
 

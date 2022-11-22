@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
     private boolean showCompleted = false, showIncomplete = true;
     private ImageView dropdownIcon, dropdownIcon2;
     private EditText inputToDo;
+    private TextView quoteView;
 
     private SearchView searchView;
     private List<FilterPowerMenuItem> filterItems;
@@ -158,7 +160,10 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
                     return;
                 }
                 Quote quote = response.body();
-                System.out.println(quote.getQuote()+" -"+ quote.getAuthor());
+                quoteView = findViewById(R.id.quoteView);
+                String quoteAndAuthor = quote.getQuote()+"\n\t-"+ quote.getAuthor();
+                quoteView.setText(quoteAndAuthor);
+                System.out.println(quoteAndAuthor);
             }
 
             @Override

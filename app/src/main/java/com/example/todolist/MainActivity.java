@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,6 +49,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /*
 This class controls the main screen. It extends our custom ToDoClickListener.
@@ -61,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
     private boolean showCompleted = false, showIncomplete = true;
     private ImageView dropdownIcon, dropdownIcon2;
     private EditText inputToDo;
+    private TextView quoteView;
 
     private SearchView searchView;
     private List<FilterPowerMenuItem> filterItems;
@@ -133,6 +141,36 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
 
         // load in data from file
         loadData();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://motivational-quote-api.herokuapp.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        InspirationalQuoteApi inspirationalQuoteApi = retrofit.create(InspirationalQuoteApi.class);
+
+        Call<Quote> call = inspirationalQuoteApi.getPosts();
+
+        call.enqueue(new Callback<Quote>() {
+
+            @Override
+            public void onResponse(Call<Quote> call, Response<Quote> response) {
+                if (!response.isSuccessful()) {
+                    System.out.println(response.code());
+                    return;
+                }
+                Quote quote = response.body();
+                quoteView = findViewById(R.id.quoteView);
+                String quoteAndAuthor = quote.getQuote()+"\n\t-"+ quote.getAuthor();
+                quoteView.setText(quoteAndAuthor);
+                System.out.println(quoteAndAuthor);
+            }
+
+            @Override
+            public void onFailure(Call<Quote> call, Throwable t) {
+                System.out.println("ERROR: "+t);
+            }
+        });
     }
 
     public void onSort(View view){

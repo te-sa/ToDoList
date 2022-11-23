@@ -30,12 +30,21 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /*
 This class controls the edit to-do page. Users can navigate to this page by clicking on a to-do
@@ -145,6 +154,11 @@ public class EditToDoActivity extends AppCompatActivity {
                         // only give the user the red box of judgement if they have entered a whole date
                         dueDateError(charSequence.toString().split("/").length > 2);
                     }
+                    // need to check that newDate is not null, otherwise app crashes on reopening the edit tab
+                    if (charSequence.length() > 4 && newDate != null) {
+                        // displaying a fact about the user-entered date in a TextView underneath the date
+                        setDateFact(getMonth(newDate), getDay(newDate));
+                    }
                 } else {
                     validDate = true;
                     newDate = null;
@@ -164,16 +178,14 @@ public class EditToDoActivity extends AppCompatActivity {
         });
 
         notify.setOnClickListener(v -> {
-            if(notify.isChecked()){
+            if (notify.isChecked()) {
                 if (ContextCompat.checkSelfPermission(EditToDoActivity.this,
                         Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                     notificationOn = true;
-                }
-                else{
+                } else {
                     requestPermissions();
                 }
-            }
-            else{
+            } else {
                 notificationOn = false;
             }
         });
@@ -185,6 +197,89 @@ public class EditToDoActivity extends AppCompatActivity {
             activityTitle += "...";
         }
         return activityTitle;
+    }
+
+    private void setDateFact(int month, int day) {
+        // building String for get request
+        String url = "https://byabbe.se/on-this-day/" + month + "/" + day + "/";
+        System.out.println(url);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        DateFactsApi dateFactsApi = retrofit.create(DateFactsApi.class);
+
+        Call<DateFacts> call = dateFactsApi.getPosts();
+
+        call.enqueue(new Callback<DateFacts>() {
+
+            @Override
+            public void onResponse(Call<DateFacts> call, Response<DateFacts> response) {
+                if (!response.isSuccessful()) {
+                    System.out.println(response.code());
+                    return;
+                }
+                DateFacts dateFacts = response.body();
+
+                int randomNum = ThreadLocalRandom.current().nextInt(0, dateFacts.getEvents().size());
+
+                String year = dateFacts.getEvents().get(randomNum).getYear();
+                String date = dateFacts.getDate();
+
+                String event = dateFacts.getEvents().get(randomNum).getDescription();
+
+                // using TextView to display information on user-entered date
+                TextView dateFactView = findViewById(R.id.dateFactView);
+                // using event.substring(0, 1).toLowerCase() so the first letter of the description is lower case
+                String dateInfo = "Here's an event that occurred on " + date + " in " + year + ": " + event;
+                dateFactView.setText(dateInfo);
+            }
+
+            @Override
+            public void onFailure(Call<DateFacts> call, Throwable t) {
+                System.out.println("ERROR: " + t);
+            }
+        });
+    }
+
+    // helper method to get integer representing day of the month from Date
+    private int getDay(Date date) {
+        return Integer.parseInt(date.toString().substring(8, 10));
+    }
+
+    // helper method to get integer representing month from Date
+    private int getMonth(Date date) {
+        // getting substring with month information
+        String monthName = date.toString().substring(4, 7);
+        switch (monthName) {
+            case "Jan":
+                return 1;
+            case "Feb":
+                return 2;
+            case "Mar":
+                return 3;
+            case "Apr":
+                return 4;
+            case "May":
+                return 5;
+            case "Jun":
+                return 6;
+            case "Jul":
+                return 7;
+            case "Aug":
+                return 8;
+            case "Sep":
+                return 9;
+            case "Oct":
+                return 10;
+            case "Nov":
+                return 11;
+            case "Dec":
+                return 12;
+        }
+        return -1;
     }
 
     // called by submit button
@@ -205,7 +300,7 @@ public class EditToDoActivity extends AppCompatActivity {
             makeNotification("Please enter a valid date");
             return;
         }
-        if(notificationOn){
+        if (notificationOn) {
             notificationCaller(getNotification("Late Task", String.format("%s is late", taskName)), 6000);
         }
 
@@ -267,7 +362,7 @@ public class EditToDoActivity extends AppCompatActivity {
         }
     }
 
-//Creates the pending intent & will send the notification to the sender class, which will then send the message
+    //Creates the pending intent & will send the notification to the sender class, which will then send the message
     private void notificationCaller(Notification notification, int delay) {
         Intent notifyInt = new Intent(this, NotificationSender.class);
 
@@ -276,22 +371,23 @@ public class EditToDoActivity extends AppCompatActivity {
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notifyInt, PendingIntent.FLAG_IMMUTABLE);
 
-        long AlarmTimer = SystemClock.elapsedRealtime()+delay;
+        long AlarmTimer = SystemClock.elapsedRealtime() + delay;
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         assert alarmManager != null;
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, AlarmTimer, pendingIntent);
 
     }
+
     //generic notification builder method
     private Notification getNotification(String title, String content) {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "NotifyLate")
-                    .setSmallIcon(R.drawable.notificationbell)
-                    .setContentTitle(title)
-                    .setContentText(content)
-                    .setAutoCancel(true);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "NotifyLate")
+                .setSmallIcon(R.drawable.notificationbell)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setAutoCancel(true);
 
-            return builder.build();
+        return builder.build();
 
 
     }
@@ -299,29 +395,30 @@ public class EditToDoActivity extends AppCompatActivity {
     //method for creating dialogue box & asking for permissions
     private void requestPermissions() {
 
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
             new AlertDialog.Builder(this)
                     .setTitle("Notification Permission")
                     .setMessage("Todo would like to send you notifications when a task is due soon or past-due")
-                    .setPositiveButton("Agree", (dialog, which) -> ActivityCompat.requestPermissions(EditToDoActivity.this, new String[] {Manifest.permission.POST_NOTIFICATIONS}, RequestPermission))
+                    .setPositiveButton("Agree", (dialog, which) -> ActivityCompat.requestPermissions(EditToDoActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, RequestPermission))
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                     .create().show();
 
 
-        }else{
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.POST_NOTIFICATIONS}, RequestPermission);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, RequestPermission);
         }
     }
 
     //Checks to see if the permission is granted or denied
     @SuppressLint("MissingSuperCall")
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == RequestPermission) {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == RequestPermission) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
 
-            }else{
+            } else {
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
             }
 

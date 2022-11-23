@@ -80,8 +80,7 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
     private FloatingActionButton toTopButton;
     private final boolean[] toTop = new boolean[2];
     private int toTopControl = 0; // 0: controlling incomplete list; 1: controlling completed list
-    private int sortingType=0; // this is used to control the sort of the tasks.
-
+    private int sortingType = 0; // this is used to control the sort of the tasks.
 
 
     // initialization code
@@ -91,8 +90,7 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
         setContentView(R.layout.activity_main);
 
         //Creates the notification channel that can be toggled on in the app info settings - Default is off.
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("NotifyLate", "Late Task Notification", NotificationManager.IMPORTANCE_HIGH);
 
             NotificationManager manager = getSystemService(NotificationManager.class);
@@ -161,23 +159,23 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
                 }
                 Quote quote = response.body();
                 quoteView = findViewById(R.id.quoteView);
-                String quoteAndAuthor = quote.getQuote()+"\n\t-"+ quote.getAuthor();
+                String quoteAndAuthor = quote.getQuote() + "\n\t-" + quote.getAuthor();
                 quoteView.setText(quoteAndAuthor);
                 System.out.println(quoteAndAuthor);
             }
 
             @Override
             public void onFailure(Call<Quote> call, Throwable t) {
-                System.out.println("ERROR: "+t);
+                System.out.println("ERROR: " + t);
             }
         });
     }
 
-    public void onSort(View view){
-        ArrayList<PowerMenuItem> list=new ArrayList<>();
-        list.add(new PowerMenuItem("Ascending Due Date",false));
-        list.add(new PowerMenuItem("Descending Due Date",false));
-        list.add(new PowerMenuItem("Total Marks",false));
+    public void onSort(View view) {
+        ArrayList<PowerMenuItem> list = new ArrayList<>();
+        list.add(new PowerMenuItem("Ascending Due Date", false));
+        list.add(new PowerMenuItem("Descending Due Date", false));
+        list.add(new PowerMenuItem("Total Marks", false));
         PowerMenu powerMenu = new PowerMenu.Builder(this)
                 .addItemList(list) // list has "Novel", "Poetry", "Art"
                 .setAnimation(MenuAnimation.SHOWUP_TOP_LEFT) // Animation start point (TOP | LEFT).
@@ -191,12 +189,12 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
                 .setSelectedMenuColor(ContextCompat.getColor(this, R.color.purple_500)).build();
         powerMenu.setOnMenuItemClickListener((position, item) -> {
             powerMenu.dismiss();
-            if(position==0)
+            if (position == 0)
                 sortingType = 0;
-            if (position==1)
+            if (position == 1)
                 sortingType = 1;
-            if(position==2)
-                sortingType=2;
+            if (position == 2)
+                sortingType = 2;
             loadData();
         });
         powerMenu.showAsDropDown(view);
@@ -240,19 +238,19 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
             else if (toDo.isDone() && filterAllows(toDo))
                 completed.add(toDo);
         }
-        if(sortingType==0) {
+        if (sortingType == 0) {
             Collections.sort(filtered, ToDo.DueDateAscComparator);
             Collections.sort(completed, ToDo.DueDateAscComparator);
         }
-        if(sortingType==1) {
+        if (sortingType == 1) {
             Collections.sort(filtered, ToDo.DueDateDescComparator);
             Collections.sort(completed, ToDo.DueDateDescComparator);
         }
-        if(sortingType==2){
-            for (ToDo task: filtered
-                 ) {
-                System.out.println(task.getText()+" total: "+task.getMaxGrade());
-                System.out.println(task.getText()+" Received: "+task.getGradeReceived());
+        if (sortingType == 2) {
+            for (ToDo task : filtered
+            ) {
+                System.out.println(task.getText() + " total: " + task.getMaxGrade());
+                System.out.println(task.getText() + " Received: " + task.getGradeReceived());
             }
             Collections.sort(filtered, ToDo.TotalMarksComparator);
             Collections.sort(completed, ToDo.TotalMarksComparator);
@@ -327,9 +325,9 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
             save();
             // Clear filters
             for (String key : filters.keySet())
-                filters.put(key,false);
+                filters.put(key, false);
             // Clear search
-            searchView.setQuery("",true);
+            searchView.setQuery("", true);
             loadData();
             // Make sure incomplete tasks list is open, not completed tasks
             if (!showIncomplete)
@@ -413,9 +411,9 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
         itemList.add(new PowerMenuItem("Edit", false));
         itemList.add(new PowerMenuItem("Edit Tags", false));
         itemList.add(new PowerMenuItem("Delete", false));
-        itemList.add(new PowerMenuItem("Set task as 'Graded'",false));
-        if(clickedToDo.getTags().contains("Graded")){
-            itemList.add(new PowerMenuItem("Enter Grade Received",false));
+        itemList.add(new PowerMenuItem("Set task as 'Graded'", false));
+        if (clickedToDo.getTags().contains("Graded")) {
+            itemList.add(new PowerMenuItem("Enter Grade Received", false));
         }
 
         PowerMenu powerMenu = new PowerMenu.Builder(this)
@@ -470,18 +468,18 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
                 i.putExtra("ToDoList", toDoList);
                 i.putExtra("Index", toDoList.indexOf(clickedToDo));
                 startActivityForResult(i, ADD_TAGS_ACTIVITY_REQUEST);
-            } else if(item.getTitle().equals("Set task as 'Graded'")) {
+            } else if (item.getTitle().equals("Set task as 'Graded'")) {
                 clickedToDo.addTag("Graded");
                 clickedToDo.removeTag("Ungraded");
                 Intent i = new Intent(this, TotalGradeActivity.class);
                 i.putExtra("ToDoList", toDoList);
                 i.putExtra("Index", toDoList.indexOf(clickedToDo));
                 startActivityForResult(i, EDIT_TODO_ACTIVITY_REQUEST);
-            } else if(item.getTitle().equals("Enter Grade Received")) { // This will show up only for Graded ToDos.
-                Intent i=new Intent(this,GradeReceived.class);
+            } else if (item.getTitle().equals("Enter Grade Received")) { // This will show up only for Graded ToDos.
+                Intent i = new Intent(this, GradeReceived.class);
                 i.putExtra("ToDoList", toDoList);
                 i.putExtra("Index", toDoList.indexOf(clickedToDo));
-                startActivityForResult(i,EDIT_TODO_ACTIVITY_REQUEST);
+                startActivityForResult(i, EDIT_TODO_ACTIVITY_REQUEST);
             }
         });
         powerMenu.showAsAnchorRightBottom(view); // view is where the menu is anchored
@@ -591,7 +589,7 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
         filterItems = new ArrayList<>();
         for (String tag : filterList) {
             if (!filters.containsKey(tag))
-                filters.put(tag,false);
+                filters.put(tag, false);
             filterItems.add(new FilterPowerMenuItem(tag, filters.get(tag)));
         }
 

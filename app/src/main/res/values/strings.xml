@@ -27,4 +27,6 @@
     <string name="filters">Filters</string>
     <string name="completed">Completed</string>
     <string name="incomplete">Incomplete</string>
+    <string name="notify_when_overdue">Notify when overdue?</string>
+    <string name="sort">Sort</string>
 </resources>

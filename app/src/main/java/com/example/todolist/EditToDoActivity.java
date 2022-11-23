@@ -30,8 +30,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -209,36 +207,36 @@ public class EditToDoActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        DateFactsApi dateFactsApi = retrofit.create(DateFactsApi.class);
+        OnThisDayApi dateInfoApi = retrofit.create(OnThisDayApi.class);
 
-        Call<DateFacts> call = dateFactsApi.getPosts();
+        Call<DateInfo> call = dateInfoApi.getPosts();
 
-        call.enqueue(new Callback<DateFacts>() {
+        call.enqueue(new Callback<DateInfo>() {
 
             @Override
-            public void onResponse(Call<DateFacts> call, Response<DateFacts> response) {
+            public void onResponse(Call<DateInfo> call, Response<DateInfo> response) {
                 if (!response.isSuccessful()) {
                     System.out.println(response.code());
                     return;
                 }
-                DateFacts dateFacts = response.body();
+                DateInfo dateInfo = response.body();
 
-                int randomNum = ThreadLocalRandom.current().nextInt(0, dateFacts.getEvents().size());
+                int randomNum = ThreadLocalRandom.current().nextInt(0, dateInfo.getEvents().size());
 
-                String year = dateFacts.getEvents().get(randomNum).getYear();
-                String date = dateFacts.getDate();
+                String year = dateInfo.getEvents().get(randomNum).getYear();
+                String date = dateInfo.getDate();
 
-                String event = dateFacts.getEvents().get(randomNum).getDescription();
+                String event = dateInfo.getEvents().get(randomNum).getDescription();
 
                 // using TextView to display information on user-entered date
                 TextView dateFactView = findViewById(R.id.dateFactView);
                 // using event.substring(0, 1).toLowerCase() so the first letter of the description is lower case
-                String dateInfo = "Here's an event that occurred on " + date + " in " + year + ": " + event;
-                dateFactView.setText(dateInfo);
+                String infoString = "Here's an event that occurred on " + date + " in " + year + ": " + event;
+                dateFactView.setText(infoString);
             }
 
             @Override
-            public void onFailure(Call<DateFacts> call, Throwable t) {
+            public void onFailure(Call<DateInfo> call, Throwable t) {
                 System.out.println("ERROR: " + t);
             }
         });

@@ -154,7 +154,8 @@ public class EditToDoActivity extends AppCompatActivity {
                         // only give the user the red box of judgement if they have entered a whole date
                         dueDateError(charSequence.toString().split("/").length > 2);
                     }
-                    if (charSequence.length() > 7 && newDate != null) {
+                    // need to check that newDate is not null, otherwise app crashes on reopening the edit tab
+                    if (charSequence.length() > 4 && newDate != null) {
                         // displaying a fact about the user-entered date in a TextView underneath the date
                         setDateFact(getMonth(newDate), getDay(newDate));
                     }

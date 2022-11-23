@@ -211,6 +211,8 @@ public class EditToDoActivity extends AppCompatActivity {
 
         Call<DateInfo> call = dateInfoApi.getPosts();
 
+        // using call object to execute HTTP request
+        // enqueue is a convenience method that executes the call on a background thread so the UI won't freeze
         call.enqueue(new Callback<DateInfo>() {
 
             @Override

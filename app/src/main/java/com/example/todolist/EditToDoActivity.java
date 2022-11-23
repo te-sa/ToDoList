@@ -30,12 +30,20 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /*
 This class controls the edit to-do page. Users can navigate to this page by clicking on a to-do
@@ -137,6 +145,7 @@ public class EditToDoActivity extends AppCompatActivity {
                         validDate = true;
                         // make sure text field is regularly colored
                         dueDateError(false);
+                        setDateFact(newDate);
                     } catch (ParseException e) {
                         // invalid date
                         validDate = false;
@@ -183,6 +192,92 @@ public class EditToDoActivity extends AppCompatActivity {
             activityTitle += "...";
         }
         return activityTitle;
+    }
+
+    private void setDateFact(Date date) {
+        String monthName = date.toString().substring(4, 7);
+        int day = Integer.parseInt(date.toString().substring(8, 10));
+        int month = 0;
+        switch (monthName) {
+            case "Jan":
+                month = 1;
+                break;
+            case "Feb":
+                month = 2;
+                break;
+            case "Mar":
+                month = 3;
+                break;
+            case "Apr":
+                month = 4;
+                break;
+            case "May":
+                month = 5;
+                break;
+            case "Jun":
+                month = 6;
+                break;
+            case "Jul":
+                month = 7;
+                break;
+            case "Aug":
+                month = 8;
+                break;
+            case "Sep":
+                month = 9;
+                break;
+            case "Oct":
+                month = 10;
+                break;
+            case "Nov":
+                month = 11;
+                break;
+            case "Dec":
+                month = 12;
+                break;
+        }
+        System.out.println(month);
+        System.out.println(day);
+        String url = "https://byabbe.se/on-this-day/" + month + "/" + day + "/";
+        System.out.println(url);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        DateFactsApi dateFactsApi = retrofit.create(DateFactsApi.class);
+
+        Call<DateFacts> call = dateFactsApi.getPosts();
+
+        call.enqueue(new Callback<DateFacts>() {
+
+            @Override
+            public void onResponse(Call<DateFacts> call, Response<DateFacts> response) {
+                if (!response.isSuccessful()) {
+                    System.out.println(response.code());
+                    return;
+                }
+                DateFacts dateFacts = response.body();
+
+                int year = dateFacts.getEvents().get(0).getYear();
+                String date = dateFacts.getDate();
+                String event = dateFacts.getEvents().get(0).getDescription();
+
+                System.out.println(year);
+                System.out.println(date);
+                System.out.println(event);
+
+                TextView dateFactView = findViewById(R.id.dateFactView);
+                String dateInfo = "In the year " + year + ", on " + date + ", " + event.substring(0,1).toLowerCase() + event.substring(1);
+                dateFactView.setText(dateInfo);
+            }
+
+            @Override
+            public void onFailure(Call<DateFacts> call, Throwable t) {
+                System.out.println("ERROR: " + t);
+            }
+        });
     }
 
     // called by submit button
@@ -315,7 +410,8 @@ public class EditToDoActivity extends AppCompatActivity {
     //Checks to see if the permission is granted or denied
     @SuppressLint("MissingSuperCall")
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode == RequestPermission) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();

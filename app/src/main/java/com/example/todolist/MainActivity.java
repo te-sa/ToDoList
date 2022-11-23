@@ -142,17 +142,20 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://motivational-quote-api.herokuapp.com/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create()) // using GSON to parse response
                 .build();
 
         InspirationalQuoteApi inspirationalQuoteApi = retrofit.create(InspirationalQuoteApi.class);
 
         Call<Quote> call = inspirationalQuoteApi.getPosts();
 
+        // using call object to execute HTTP request
+        // enqueue is a convenience method that executes the call on a background thread so the UI won't freeze
         call.enqueue(new Callback<Quote>() {
 
             @Override
             public void onResponse(Call<Quote> call, Response<Quote> response) {
+                // to handle 404 responses etc
                 if (!response.isSuccessful()) {
                     System.out.println(response.code());
                     return;

@@ -13,19 +13,19 @@ public class NotificationSender extends BroadcastReceiver {
 
     public static String NotificationID = "notification-id";
     public static String NOTIFICATION = "Notification";
+
     @Override
     public void onReceive(Context context, Intent intent) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = intent.getParcelableExtra(NOTIFICATION);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             NotificationChannel channel = new NotificationChannel(NotificationID, NOTIFICATION, NotificationManager.IMPORTANCE_HIGH);
             assert notificationManager != null;
-                notificationManager.createNotificationChannel(channel);
+            notificationManager.createNotificationChannel(channel);
         }
         int id = intent.getIntExtra(NotificationID, 0);
         assert notificationManager != null;
-        notificationManager.notify(id,notification);
+        notificationManager.notify(id, notification);
     }
 }

@@ -164,16 +164,14 @@ public class EditToDoActivity extends AppCompatActivity {
         });
 
         notify.setOnClickListener(v -> {
-            if(notify.isChecked()){
+            if (notify.isChecked()) {
                 if (ContextCompat.checkSelfPermission(EditToDoActivity.this,
                         Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                     notificationOn = true;
-                }
-                else{
+                } else {
                     requestPermissions();
                 }
-            }
-            else{
+            } else {
                 notificationOn = false;
             }
         });
@@ -205,7 +203,7 @@ public class EditToDoActivity extends AppCompatActivity {
             makeNotification("Please enter a valid date");
             return;
         }
-        if(notificationOn){
+        if (notificationOn) {
             notificationCaller(getNotification("Late Task", String.format("%s is late", taskName)), 6000);
         }
 
@@ -267,7 +265,7 @@ public class EditToDoActivity extends AppCompatActivity {
         }
     }
 
-//Creates the pending intent & will send the notification to the sender class, which will then send the message
+    //Creates the pending intent & will send the notification to the sender class, which will then send the message
     private void notificationCaller(Notification notification, int delay) {
         Intent notifyInt = new Intent(this, NotificationSender.class);
 
@@ -276,22 +274,23 @@ public class EditToDoActivity extends AppCompatActivity {
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notifyInt, PendingIntent.FLAG_IMMUTABLE);
 
-        long AlarmTimer = SystemClock.elapsedRealtime()+delay;
+        long AlarmTimer = SystemClock.elapsedRealtime() + delay;
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         assert alarmManager != null;
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, AlarmTimer, pendingIntent);
 
     }
+
     //generic notification builder method
     private Notification getNotification(String title, String content) {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "NotifyLate")
-                    .setSmallIcon(R.drawable.notificationbell)
-                    .setContentTitle(title)
-                    .setContentText(content)
-                    .setAutoCancel(true);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "NotifyLate")
+                .setSmallIcon(R.drawable.notificationbell)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setAutoCancel(true);
 
-            return builder.build();
+        return builder.build();
 
 
     }
@@ -299,17 +298,17 @@ public class EditToDoActivity extends AppCompatActivity {
     //method for creating dialogue box & asking for permissions
     private void requestPermissions() {
 
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
             new AlertDialog.Builder(this)
                     .setTitle("Notification Permission")
                     .setMessage("Todo would like to send you notifications when a task is due soon or past-due")
-                    .setPositiveButton("Agree", (dialog, which) -> ActivityCompat.requestPermissions(EditToDoActivity.this, new String[] {Manifest.permission.POST_NOTIFICATIONS}, RequestPermission))
+                    .setPositiveButton("Agree", (dialog, which) -> ActivityCompat.requestPermissions(EditToDoActivity.this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, RequestPermission))
                     .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                     .create().show();
 
 
-        }else{
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.POST_NOTIFICATIONS}, RequestPermission);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, RequestPermission);
         }
     }
 
@@ -317,11 +316,11 @@ public class EditToDoActivity extends AppCompatActivity {
     @SuppressLint("MissingSuperCall")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == RequestPermission) {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == RequestPermission) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
 
-            }else{
+            } else {
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
             }
 

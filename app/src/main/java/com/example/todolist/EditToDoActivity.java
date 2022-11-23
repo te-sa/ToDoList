@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -145,7 +146,6 @@ public class EditToDoActivity extends AppCompatActivity {
                         validDate = true;
                         // make sure text field is regularly colored
                         dueDateError(false);
-                        setDateFact(newDate);
                     } catch (ParseException e) {
                         // invalid date
                         validDate = false;
@@ -153,6 +153,10 @@ public class EditToDoActivity extends AppCompatActivity {
                         newDate = null;
                         // only give the user the red box of judgement if they have entered a whole date
                         dueDateError(charSequence.toString().split("/").length > 2);
+                    }
+                    if (charSequence.length() > 7 && newDate != null) {
+                        // displaying a fact about the user-entered date in a TextView underneath the date
+                        setDateFact(getMonth(newDate), getDay(newDate));
                     }
                 } else {
                     validDate = true;
@@ -194,50 +198,8 @@ public class EditToDoActivity extends AppCompatActivity {
         return activityTitle;
     }
 
-    private void setDateFact(Date date) {
-        String monthName = date.toString().substring(4, 7);
-        int day = Integer.parseInt(date.toString().substring(8, 10));
-        int month = 0;
-        switch (monthName) {
-            case "Jan":
-                month = 1;
-                break;
-            case "Feb":
-                month = 2;
-                break;
-            case "Mar":
-                month = 3;
-                break;
-            case "Apr":
-                month = 4;
-                break;
-            case "May":
-                month = 5;
-                break;
-            case "Jun":
-                month = 6;
-                break;
-            case "Jul":
-                month = 7;
-                break;
-            case "Aug":
-                month = 8;
-                break;
-            case "Sep":
-                month = 9;
-                break;
-            case "Oct":
-                month = 10;
-                break;
-            case "Nov":
-                month = 11;
-                break;
-            case "Dec":
-                month = 12;
-                break;
-        }
-        System.out.println(month);
-        System.out.println(day);
+    private void setDateFact(int month, int day) {
+        // building String for get request
         String url = "https://byabbe.se/on-this-day/" + month + "/" + day + "/";
         System.out.println(url);
 
@@ -260,16 +222,17 @@ public class EditToDoActivity extends AppCompatActivity {
                 }
                 DateFacts dateFacts = response.body();
 
-                int year = dateFacts.getEvents().get(0).getYear();
+                int randomNum = ThreadLocalRandom.current().nextInt(0, dateFacts.getEvents().size());
+
+                String year = dateFacts.getEvents().get(randomNum).getYear();
                 String date = dateFacts.getDate();
-                String event = dateFacts.getEvents().get(0).getDescription();
 
-                System.out.println(year);
-                System.out.println(date);
-                System.out.println(event);
+                String event = dateFacts.getEvents().get(randomNum).getDescription();
 
+                // using TextView to display information on user-entered date
                 TextView dateFactView = findViewById(R.id.dateFactView);
-                String dateInfo = "In the year " + year + ", on " + date + ", " + event.substring(0,1).toLowerCase() + event.substring(1);
+                // using event.substring(0, 1).toLowerCase() so the first letter of the description is lower case
+                String dateInfo = "Here's an event that occurred on " + date + " in " + year + ": " + event;
                 dateFactView.setText(dateInfo);
             }
 
@@ -278,6 +241,44 @@ public class EditToDoActivity extends AppCompatActivity {
                 System.out.println("ERROR: " + t);
             }
         });
+    }
+
+    // helper method to get integer representing day of the month from Date
+    private int getDay(Date date) {
+        return Integer.parseInt(date.toString().substring(8, 10));
+    }
+
+    // helper method to get integer representing month from Date
+    private int getMonth(Date date) {
+        // getting substring with month information
+        String monthName = date.toString().substring(4, 7);
+        switch (monthName) {
+            case "Jan":
+                return 1;
+            case "Feb":
+                return 2;
+            case "Mar":
+                return 3;
+            case "Apr":
+                return 4;
+            case "May":
+                return 5;
+            case "Jun":
+                return 6;
+            case "Jul":
+                return 7;
+            case "Aug":
+                return 8;
+            case "Sep":
+                return 9;
+            case "Oct":
+                return 10;
+            case "Nov":
+                return 11;
+            case "Dec":
+                return 12;
+        }
+        return -1;
     }
 
     // called by submit button

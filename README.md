@@ -26,13 +26,13 @@ objects
 
 ### How APIs are used in the system
 
-#### Motivational Quotes API
+#### [Motivational Quotes API](https://motivational-quote-api.herokuapp.com/)
 
 I used the motivational quotes API linked above to get a random inspirational quote. This quote is
 displayed above the search bar on the main page of the to-do list app. It is meant to motivate the
 user to achieve their tasks.
 
-#### On this Day API
+#### [On this Day API](https://byabbe.se/on-this-day/)
 
 I used the On this Day API linked above to get information about historical events by the date they
 occurred on. When the user enters a due date for their task on the EditToDo page, I incorporate the

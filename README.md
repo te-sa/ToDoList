@@ -32,6 +32,8 @@ I used the motivational quotes API linked above to get a random inspirational qu
 displayed above the search bar on the main page of the to-do list app. It is meant to motivate the
 user to achieve their tasks.
 
+<img src="https://user-images.githubusercontent.com/77898527/203495844-2cafdee7-2f50-442f-86d9-6fb37a698693.png" alt="Motivatonal quote displayed" width="100"/>
+
 #### [On this Day API](https://byabbe.se/on-this-day/)
 
 I used the On this Day API linked above to get information about historical events by the date they
@@ -40,6 +42,8 @@ user-entered date into a get request to the API. The API then returns a list of 
 that occurred on the day the user entered as their due date. This information is processed and
 displayed to the user in a TextView underneath the box where they entered their due date. These
 historical fun facts are meant to engage users.
+
+<img src="https://user-images.githubusercontent.com/77898527/203496039-d5f06f35-1e9e-4004-a56c-b2e24821df70.png" alt="Historical fact displayed" width="100"/>
 
 ## Class structure
 
@@ -114,6 +118,7 @@ improvements, such as adding a search bar.
 - users can search for tasks by name. This helps users find tasks more easily. Used the AndroidX
   library to implement a search bar. This feature improves the UI and laid the groundwork for
   allowing users to search tasks.
+  
   <img src="https://user-images.githubusercontent.com/77898527/200717087-9fd058f9-d2d8-4784-ab4d-d55fc04206fd.png" alt="searchTasks" width="100"/>
 
 #### Completed tasks are viewable - Limitation fix 2
@@ -121,12 +126,14 @@ improvements, such as adding a search bar.
 - now displaying completed tasks using a RecyclerView (from AndroidX Library). This feature is a
   major improvement, because it allows users to reference previously completed tasks. Previously,
   tasks just became invisible to the user upon completion.
+  
   <img src="https://user-images.githubusercontent.com/77898527/200717214-a077b894-7877-4953-9e43-907a2344fec9.png" alt="viewCompleted" width="100"/>
 
 #### Sorting tasks by their due date or grade weighting - Limitation fix 3
 
 - Users are able to sort their tasks by due date. They can sort them by due date ascending or
   descending.
+  
   <img src="https://user-images.githubusercontent.com/77038122/201797367-33f34ba7-7131-4092-ae2e-49ae8238709c.png" alt="sorting menu" width="100"/>
 
 #### Automatically classify tasks as graded or ungraded - Limitation fix 4
@@ -137,6 +144,7 @@ improvements, such as adding a search bar.
 #### Added filtering by tags
 
 - users can sort tasks based on tags. This feature helps users organize their tasks.
+
   <img src="https://user-images.githubusercontent.com/77898527/200717120-6b2f2f3e-4b08-4d8b-b7b9-7c01065b5a02.png" alt="filteringByTags" width="100"/>
 
 #### Improved goBack()
@@ -148,6 +156,7 @@ improvements, such as adding a search bar.
 
 - users can now see the due dates they add on the main page. This feature makes the app easier to
   use; users can see the due date on the main page instead of having to click on the task now.
+  
   <img src="https://user-images.githubusercontent.com/77898527/200717154-85eb8992-f97d-4f5e-9f8c-692e3994d65a.png" alt="displayDueDate" width="100"/>
 
 #### Refactored the way persistence is implemented
@@ -166,6 +175,7 @@ improvements, such as adding a search bar.
   task. This one of the libraries available in the Android library, but it was a steep learning
   curve to be able use it. Many hours were spent by multiple team members in order to understand how
   to use RecyclerView.
+  
   <img src="https://user-images.githubusercontent.com/77898527/200717171-08738099-3592-425b-9bb1-6eaeb21d4fd5.png" alt="addTags" width="100"/>
 
 #### Added context menu - New feature 2
@@ -173,6 +183,7 @@ improvements, such as adding a search bar.
 - used the Skydoves open-source library to add a context menu when the user clicks the three dots on
   a task. This feature improves the effectiveness of our app by reducing the number of steps users
   have to complete to perform common tasks.
+  
   <img src="https://user-images.githubusercontent.com/77898527/200717248-8847e1d4-6115-4310-9fd0-512885bbe4ea.png" alt="contextMenu" width="100"/>
 
 #### App notifications - New feature 3
@@ -197,6 +208,7 @@ improvements, such as adding a search bar.
   their recent tasks at the bottom and back up to the search bar and the filter menu. This uses a
   floating button from the google android material library in order to keep the button in the same
   spot on the screen regardless of how far the user has scrolled.
+  
   <img src="https://user-images.githubusercontent.com/77038122/201798552-ebeaf824-acf6-4fa1-9600-a84d1960c1c8.png" alt="viewCompleted" width="100"/>
 
 ## Compiling our code

@@ -141,34 +141,36 @@ public class MainActivity extends AppCompatActivity implements ToDoClickListener
         loadData();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://motivational-quote-api.herokuapp.com/")
+                .baseUrl("https://api.api-ninjas.com/v1/")
                 .addConverterFactory(GsonConverterFactory.create()) // using GSON to parse response
                 .build();
 
         InspirationalQuoteApi inspirationalQuoteApi = retrofit.create(InspirationalQuoteApi.class);
 
-        Call<Quote> call = inspirationalQuoteApi.getPosts();
+        Call<List<Quote>> call = inspirationalQuoteApi.getPosts();
 
         // using call object to execute HTTP request
         // enqueue is a convenience method that executes the call on a background thread so the UI won't freeze
-        call.enqueue(new Callback<Quote>() {
+        call.enqueue(new Callback<List<Quote>>() {
 
             @Override
-            public void onResponse(Call<Quote> call, Response<Quote> response) {
+            public void onResponse(Call<List<Quote>> call, Response<List<Quote>> response) {
                 // to handle 404 responses etc
                 if (!response.isSuccessful()) {
                     System.out.println(response.code());
                     return;
                 }
-                Quote quote = response.body();
+                Quote quote = response.body().get(0);
                 quoteView = findViewById(R.id.quoteView);
-                String quoteAndAuthor = quote.getQuote() + "\n\t-" + quote.getAuthor();
+                String[] authorString = quote.getAuthor().split(",");
+                String author = (authorString.length > 1) ? authorString[1] + " " + authorString[0] : authorString[0];
+                String quoteAndAuthor = quote.getQuote() + "\n\t-" + author;
                 quoteView.setText(quoteAndAuthor);
                 System.out.println(quoteAndAuthor);
             }
 
             @Override
-            public void onFailure(Call<Quote> call, Throwable t) {
+            public void onFailure(Call<List<Quote>> call, Throwable t) {
                 System.out.println("ERROR: " + t);
             }
         });

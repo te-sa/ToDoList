@@ -10,6 +10,7 @@ public interface InspirationalQuoteApi {
 
     // Retrofit will auto-generate necessary code from this interface
     // Getting API key from Config class that is not added to git because I don't want to publish the api key
+    // to get an API key: make an account on this website: https://api-ninjas.com/api
     @Headers({"X-Api-Key: " + Config.API_KEY})
     @GET("quotes?category=success")
     Call<List<Quote>> getPosts();

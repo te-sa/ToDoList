@@ -28,11 +28,12 @@ objects
 
 #### [Quotes API](https://api-ninjas.com/api/quotes)
 
-I used the Quotes API linked above to get a random quote about success. This quote is
-displayed above the search bar on the main page of the to-do list app. It is meant to motivate the
-user to achieve their tasks.
+I used the Quotes API linked above to get a random quote about success. This quote is displayed
+above the search bar on the main page of the to-do list app. It is meant to motivate the user to
+achieve their tasks.
 
-To get an API key, you will need to make an account on the linked page.
+To get an API key, you will need to make an account on the linked page, then add it as a header for
+the GET request sent in the **InspirationalQuoteApi**
 
 <img src="https://user-images.githubusercontent.com/77898527/204408869-de945300-909c-46fc-a6ea-7d1cbab13a60.png" alt="Motivatonal quote displayed" width="100"/>
 
@@ -49,7 +50,10 @@ This API does not require an API key.
 
 <img src="https://user-images.githubusercontent.com/77898527/203496039-d5f06f35-1e9e-4004-a56c-b2e24821df70.png" alt="Historical fact displayed" width="100"/>
 
-For both of those WebApis, I used the RetroFit2 library to simplify making HTTP requests. The library generates the implementation for the methods specified in the InspirationalQuoteApi and the OnThisDayApi interfaces. I also used the Gson converter library to turn the response from the web server into a Java object (in my case the Quote and DateInfo objects).
+For both of those WebApis, I used the RetroFit2 library to simplify making HTTP requests. The
+library generates the implementation for the methods specified in the InspirationalQuoteApi and the
+OnThisDayApi interfaces. I also used the Gson converter library to turn the response from the web
+server into a Java object (in my case the Quote and DateInfo objects).
 
 ## Class structure
 
@@ -124,7 +128,7 @@ improvements, such as adding a search bar.
 - users can search for tasks by name. This helps users find tasks more easily. Used the AndroidX
   library to implement a search bar. This feature improves the UI and laid the groundwork for
   allowing users to search tasks.
-  
+
   <img src="https://user-images.githubusercontent.com/77898527/200717087-9fd058f9-d2d8-4784-ab4d-d55fc04206fd.png" alt="searchTasks" width="100"/>
 
 #### Completed tasks are viewable - Limitation fix 2
@@ -132,14 +136,14 @@ improvements, such as adding a search bar.
 - now displaying completed tasks using a RecyclerView (from AndroidX Library). This feature is a
   major improvement, because it allows users to reference previously completed tasks. Previously,
   tasks just became invisible to the user upon completion.
-  
+
   <img src="https://user-images.githubusercontent.com/77898527/200717214-a077b894-7877-4953-9e43-907a2344fec9.png" alt="viewCompleted" width="100"/>
 
 #### Sorting tasks by their due date or grade weighting - Limitation fix 3
 
 - Users are able to sort their tasks by due date. They can sort them by due date ascending or
   descending.
-  
+
   <img src="https://user-images.githubusercontent.com/77038122/201797367-33f34ba7-7131-4092-ae2e-49ae8238709c.png" alt="sorting menu" width="100"/>
 
 #### Automatically classify tasks as graded or ungraded - Limitation fix 4
@@ -162,7 +166,7 @@ improvements, such as adding a search bar.
 
 - users can now see the due dates they add on the main page. This feature makes the app easier to
   use; users can see the due date on the main page instead of having to click on the task now.
-  
+
   <img src="https://user-images.githubusercontent.com/77898527/200717154-85eb8992-f97d-4f5e-9f8c-692e3994d65a.png" alt="displayDueDate" width="100"/>
 
 #### Refactored the way persistence is implemented
@@ -181,7 +185,7 @@ improvements, such as adding a search bar.
   task. This one of the libraries available in the Android library, but it was a steep learning
   curve to be able use it. Many hours were spent by multiple team members in order to understand how
   to use RecyclerView.
-  
+
   <img src="https://user-images.githubusercontent.com/77898527/200717171-08738099-3592-425b-9bb1-6eaeb21d4fd5.png" alt="addTags" width="100"/>
 
 #### Added context menu - New feature 2
@@ -189,7 +193,7 @@ improvements, such as adding a search bar.
 - used the Skydoves open-source library to add a context menu when the user clicks the three dots on
   a task. This feature improves the effectiveness of our app by reducing the number of steps users
   have to complete to perform common tasks.
-  
+
   <img src="https://user-images.githubusercontent.com/77898527/200717248-8847e1d4-6115-4310-9fd0-512885bbe4ea.png" alt="contextMenu" width="100"/>
 
 #### App notifications - New feature 3
@@ -214,7 +218,7 @@ improvements, such as adding a search bar.
   their recent tasks at the bottom and back up to the search bar and the filter menu. This uses a
   floating button from the google android material library in order to keep the button in the same
   spot on the screen regardless of how far the user has scrolled.
-  
+
   <img src="https://user-images.githubusercontent.com/77038122/201798552-ebeaf824-acf6-4fa1-9600-a84d1960c1c8.png" alt="viewCompleted" width="100"/>
 
 ## Compiling our code

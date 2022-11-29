@@ -9,7 +9,7 @@ students.
 
 ### Classes and interfaces added
 
-#### Motivational Quotes API
+#### Quotes API
 
 **Quote** defines fields (quote and author) for a Quote object.
 
@@ -26,13 +26,15 @@ objects
 
 ### How APIs are used in the system
 
-#### [Motivational Quotes API](https://motivational-quote-api.herokuapp.com/)
+#### [Quotes API](https://api-ninjas.com/api/quotes)
 
-I used the motivational quotes API linked above to get a random inspirational quote. This quote is
+I used the Quotes API linked above to get a random quote about success. This quote is
 displayed above the search bar on the main page of the to-do list app. It is meant to motivate the
 user to achieve their tasks.
 
-<img src="https://user-images.githubusercontent.com/77898527/203495844-2cafdee7-2f50-442f-86d9-6fb37a698693.png" alt="Motivatonal quote displayed" width="100"/>
+To get an API key, you will need to make an account on the linked page.
+
+<img src="https://user-images.githubusercontent.com/77898527/204408869-de945300-909c-46fc-a6ea-7d1cbab13a60.png" alt="Motivatonal quote displayed" width="100"/>
 
 #### [On this Day API](https://byabbe.se/on-this-day/)
 
@@ -43,7 +45,11 @@ that occurred on the day the user entered as their due date. This information is
 displayed to the user in a TextView underneath the box where they entered their due date. These
 historical fun facts are meant to engage users.
 
+This API does not require an API key.
+
 <img src="https://user-images.githubusercontent.com/77898527/203496039-d5f06f35-1e9e-4004-a56c-b2e24821df70.png" alt="Historical fact displayed" width="100"/>
+
+For both of those WebApis, I used the RetroFit2 library to simplify making HTTP requests. The library generates the implementation for the methods specified in the InspirationalQuoteApi and the OnThisDayApi interfaces. I also used the Gson converter library to turn the response from the web server into a Java object (in my case the Quote and DateInfo objects).
 
 ## Class structure
 

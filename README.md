@@ -226,7 +226,7 @@ improvements, such as adding a search bar.
 There are two ways to compile our code:
 
 1) clone the project in Android studio and run it on an emulator in the app
-2) use the [apk file](https://github.com/te-sa/ToDoList/releases/download/v3.0.0/v3.0.0.apk) from
-   our latest [release](https://github.com/te-sa/ToDoList/releases/tag/v3.0.0) to install the app on
+2) use the [apk file](https://github.com/te-sa/ToDoList/releases/download/v3.1.0/v3.1.0.apk) from
+   our latest [release](https://github.com/te-sa/ToDoList/releases/tag/v3.1.0) to install the app on
    an Android phone
 
